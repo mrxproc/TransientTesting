@@ -12,7 +12,7 @@ jobs:
       PR_NUMBER: ${{ github.event.number }}
     steps:
       - name: Install dependencies
-        run: sudo apt-get rsync
+        run: sudo apt-get install -y rsync
 
       - name: Get the pull request
         uses: actions/checkout@v3
