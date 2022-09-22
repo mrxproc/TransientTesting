@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<specification xmlns="http://docbook.org/ns/docbook"
+               xmlns:cs="http://www.w3.org/XML/XProc/2006/04/components#"
+               xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax"
+               xmlns:p="http://www.w3.org/ns/xproc"
+               xmlns:xi="http://www.w3.org/2001/XInclude"
+               xmlns:xlink="http://www.w3.org/1999/xlink"
+               xml:id='steps'
+               class="ed"
+               version="5.0-extension w3c-xproc">
+<info>
+<title>XProc 3.0+: Standard Step Library</title>
+<!--
+<pubdate>2022-09-12</pubdate>
+<bibliomisc role="final-uri">https://spec.xproc.org/3.0/steps/</bibliomisc>
+-->
+<copyright><year>2018</year><year>2019</year><year>2020</year><year>2021</year><year>2022</year>
+<holder>the Contributors to the XProc 3.0 Standard Step Library
+specifications</holder>
+</copyright>
+
+<bibliomisc role="github-repo">xproc/3.0-steps</bibliomisc>
+<bibliomisc role="w3c-cg"
+            xlink:href="https://www.w3.org/community/xproc-next/">XProc Next</bibliomisc>
+
+<bibliorelation type="isformatof" xlink:href="specification.xml">XML</bibliorelation>
+<!--
+<bibliorelation type="isformatof" xlink:href="steps_a4.pdf">PDF (A4)</bibliorelation>
+<bibliorelation type="isformatof" xlink:href="steps_letter.pdf">PDF (US Letter)</bibliorelation>
+-->
+<authorgroup>
+  <author>
+    <personname>Norman Walsh</personname>
+  </author>
+  <author>
+    <personname>Achim Berndzen</personname>
+  </author>
+  <author>
+    <personname>Gerrit Imsieke</personname>
+  </author>
+  <author>
+    <personname>Erik Siegel</personname>
+  </author>
+</authorgroup>
+
+<abstract>
+  <para>This specification describes the standard step vocabulary of
+  <citetitle>XProc 3.0: An XML Pipeline Language</citetitle>.</para>
+</abstract>
+
+<legalnotice xml:id="sotd" role="status">
+  <para>This specification was published by the
+  <link xlink:href="https://www.w3.org/community/xproc-next/">XProc
+  Next Community Group</link>. It is not a W3C Standard nor is it on
+  the W3C Standards Track. Please note that under the
+  <link xlink:href="https://www.w3.org/community/about/agreements/cla/">W3C
+  Community Contributor License Agreement (CLA)</link> there is a limited
+  opt-out and other conditions apply. Learn more about <link
+  xlink:href="https://www.w3.org/community/">W3C Community and Business
+  Groups</link>.
+  </para>
+ 
+  <para>If you wish to make comments regarding this document, please
+  send them to
+  <link xlink:href="mailto:xproc-dev@w3.org">xproc-dev@w3.org</link>.
+  (<link xlink:href="mailto:xproc-dev-request@w3.org?subject=subscribe">subscribe</link>,
+  <link xlink:href="https://lists.w3.org/Archives/Public/xproc-dev/">archives</link>).
+  </para>
+
+<note role="editorial">
+<para>This draft is the “editor’s working draft” and includes changes made
+after the XProc 3.0 standard step specification was released.
+</para>
+</note>
+
+<para>This document is derived from
+<link xlink:href="https://www.w3.org/TR/2010/REC-xproc-20100511/">XProc:
+An XML Pipeline Language</link> published by the W3C.</para>
+</legalnotice>
+</info>
+
+<section xml:id="introduction">
+  <title>Introduction</title>
+
+<para>This specification describes the standard, required atomic XProc
+steps. A machine-readable description of these steps may be found in
+<link xlink:href="steps.xpl">steps.xpl</link>.
+</para>
+
+<para>Many atomic steps are available for <biblioref
+linkend="xproc30"/>. They are described in several specifications.
+This specification describes the general background common to all
+steps. A conformant processor <rfc2119>must</rfc2119> implement all of
+the steps in this specification. Additional steps may also be
+implemented.
+</para>
+
+<para>The types given for options should be understood as follows:</para>
+<itemizedlist>
+  <listitem>
+    <para>Types in the XML Schema namespace, identified as QNames with the
+    <code>xs:</code> prefix, as per the XML Schema specification with one
+    exception. Anywhere an <code>xs:QName</code> is specified,
+    an
+    <link xlink:href="https://www.w3.org/TR/xquery-30/#doc-xquery30-EQName">EQName</link>
+    is allowed.</para>
+  </listitem>
+  <listitem>
+    <para><type>XPathExpression</type>:
+    As a string per <biblioref linkend="xmlschema-2"/>, including
+    whitespace normalization, and the further requirement to be a
+    conformant Expression per <biblioref linkend="xpath31"/>.
+    </para>
+  </listitem>
+  <listitem xml:id="dt-selection-pattern">
+    <para><type>XSLTSelectionPattern</type>:
+    As a string per <biblioref linkend="xslt30"/> conforming to an XSLT
+    <emphasis>selection pattern</emphasis>.</para>
+  </listitem>
+  <listitem>
+    <para><type>XPathSequenceType</type>: An XPath
+    <link xlink:href="https://www.w3.org/TR/xpath-31/#id-types">sequence type</link>.
+    </para>
+  </listitem>
+  <listitem>
+    <para><type>ContentType</type>: A media type as defined in
+    <biblioref linkend="rfc2046"/>.
+    </para>
+  </listitem>
+  <listitem>
+    <para><type>ContentTypes</type>:
+    As a whitespace separated list of media types as defined in
+    <biblioref linkend="rfc2046"/>.
+    </para>
+  </listitem>
+</itemizedlist>
+
+<para>Option values are often expressed using the shortcut syntax. In
+these cases, the option shortcuts are generally treated as value
+templates. However, for options of type <code>map()</code> or
+<code>array()</code>, an expression is <emphasis>required</emphasis>
+(there is no non-expression string which can ever be a legal value for
+a map or array). Given that every value entered this way will have to
+be a value template, and consequently every curly brace contained
+within the expression will have to be escaped, values of type map or
+array are defined to be expressions directly.</para>
+
+<para>Some aspects of documents are generally unchanged by steps:</para>
+
+<itemizedlist>
+<listitem>
+<para>When a step in this library produces an output document,
+the base URI of the output is the base URI of the step's primary
+input document unless the step's process explicitly sets an
+<tag class="attribute">xml:base</tag> attribute or the step's
+description explicitly states how the base URI is constructed.</para>
+</listitem>
+<listitem>
+<para>Steps are responsible for describing how document properties are
+transformed as documents flow through them. Many steps claim that the
+specified properties are preserved. Generally, it is the
+responsibility of the pipeline author to determine when this is
+inapropriate and take corrective action. However, it is the
+responsibility of the pipeline processor to assure that the
+<code>content-type</code> property is correct. If a step transforms a
+document in a manner that is inconsistent with the
+<code>content-type</code> property (accepting an XML document on the
+source port but producing a text document on the result, for example), the
+processor must assure that the <code>content-type</code> property is appropriate.
+If a step changes the <code>content-type</code> in this way, it <rfc2119>must</rfc2119> also
+remove the <code>serialization</code> property
+</para>
+</listitem>
+</itemizedlist>
+
+<para xml:id="cv.result">Also, in this specification, several steps use this
+element for result information:</para>
+
+<e:rng-pattern name="VocabResult"/>
+
+<para>When a step uses an XPath to compute an option value, the XPath
+context is as defined in <biblioref linkend="xproc30"/>.</para>
+
+<para>When a step specifies a particular version of a technology,
+implementations <rfc2119>must</rfc2119> implement that
+version or a subsequent version that is backwards compatible with that
+version. At user-option, they may implement other non-backwards
+compatible versions.</para>
+  
+<para>In this specification the words <rfc2119>must</rfc2119>, <rfc2119>must not</rfc2119>,
+        <rfc2119>should</rfc2119>, <rfc2119>should not</rfc2119>, <rfc2119>may</rfc2119> and
+        <rfc2119>recommended</rfc2119> are to be interpreted as described in <biblioref
+linkend="rfc2119"/>.</para>
+
+<para>As described in <xspecref spec="xproc" xref="psvi-support"/>,
+steps may not produce PSVI output unless that behavior is explicitly
+described. In this specification, the steps that may produce PSVI
+output are the “identity” steps: <tag>p:identity</tag>,
+<tag>p:store</tag>, and <tag>p:split-sequence</tag> (which <rfc2119>must</rfc2119> preserve 
+PSVI properties that appear on their inputs). In addition, the
+<tag>p:xslt</tag> and <tag>p:xquery</tag> steps <rfc2119>may</rfc2119> return documents with
+PSVI annotations.</para>
+
+</section>
+
+<section xml:id="req-steps">
+<title>The required steps</title>
+
+<para>A conformant processor must support all of these steps.</para>
+
+<xi:include href="steps/add-attribute.xml"/>
+<xi:include href="steps/add-xml-base.xml"/>
+<xi:include href="steps/archive.xml"/>
+<xi:include href="steps/archive-manifest.xml"/>
+<xi:include href="steps/cast-content-type.xml"/>
+<xi:include href="steps/compare.xml"/>
+<xi:include href="steps/compress.xml"/>
+<xi:include href="steps/count.xml"/>
+<xi:include href="steps/delete.xml"/>
+<xi:include href="steps/error.xml"/>
+<xi:include href="steps/filter.xml"/>
+<xi:include href="steps/hash.xml"/>
+<xi:include href="steps/http-request.xml"/>
+<xi:include href="steps/identity.xml"/>
+<xi:include href="steps/insert.xml"/>
+<xi:include href="steps/json-join.xml"/>
+<xi:include href="steps/json-merge.xml" />
+<xi:include href="steps/label-elements.xml"/>
+<xi:include href="steps/load.xml"/>
+<xi:include href="steps/make-absolute-uris.xml"/>
+<xi:include href="steps/namespace-delete.xml" />
+<xi:include href="steps/namespace-rename.xml"/>
+<xi:include href="steps/pack.xml"/>
+<xi:include href="steps/rename.xml"/>
+<xi:include href="steps/replace.xml"/>
+<xi:include href="steps/set-attributes.xml"/>
+<xi:include href="steps/set-properties.xml"/>
+<xi:include href="steps/sink.xml"/>
+<xi:include href="steps/split-sequence.xml"/>
+<xi:include href="steps/store.xml"/>
+<xi:include href="steps/string-replace.xml"/>
+<xi:include href="steps/text-count.xml"/>
+<xi:include href="steps/text-head.xml"/>
+<xi:include href="steps/text-join.xml"/>
+<xi:include href="steps/text-replace.xml"/>
+<xi:include href="steps/text-sort.xml"/>
+<xi:include href="steps/text-tail.xml"/>
+<xi:include href="steps/unarchive.xml"/>
+<xi:include href="steps/uncompress.xml"/>
+<xi:include href="steps/unwrap.xml"/>
+<xi:include href="steps/uuid.xml"/>
+<xi:include href="steps/wrap-sequence.xml"/>
+<xi:include href="steps/wrap.xml"/>
+<xi:include href="steps/www-form-urldecode.xml"/>
+<xi:include href="steps/www-form-urlencode.xml"/>
+<xi:include href="steps/xinclude.xml"/>
+<xi:include href="steps/xquery.xml"/>
+<xi:include href="steps/xslt.xml"/>
+</section>
+
+<xi:include href="errors.xml"/>
+<xi:include href="conformance.xml"/>
+<xi:include href="references.xml"/>
+
+<xi:include href="../../../build/glossary.xml">
+  <xi:fallback>
+    <glossary xml:id="glossary">
+      <title>Glossary</title>
+      <para>Glossary needs to be generated</para>
+    </glossary>
+  </xi:fallback>
+</xi:include>
+
+<xi:include href="ancillary.xml"/>
+<xi:include href="credits.xml"/>
+
+<appendix xml:id="changelog">
+<title>Change Log</title>
+
+<para>This appendix catalogs non-editorial changes made after the August 2020
+“<link xlink:href="https://spec.xproc.org/lastcall-2020-08/head/steps/">last call</link>”
+draft:</para>
+
+<orderedlist>
+<listitem>
+<para>Clarified that the manifest has precedence in the <tag>p:archive</tag> step.
+(issue
+<link xlink:href="https://github.com/xproc/3.0-steps/issues/462">462</link>.)
+</para>
+</listitem>
+<listitem>
+<para>Changed the type of several options from <tag>xs:token</tag> to
+<tag>xs:string</tag>
+(issue
+<link xlink:href="https://github.com/xproc/3.0-steps/issues/490">490</link>.)
+</para>
+</listitem>
+<listitem>
+<para>Changed the type of the <option>parameters</option> option from
+<code>map(xs:string,xs:untypedAtomic+)</code> to
+<code>map(xs:string,xs:anyAtomicType+)</code>.
+(issue
+<link xlink:href="https://github.com/xproc/3.0-steps/issues/491">491</link>.)
+</para>
+</listitem>
+</orderedlist>
+
+<para>These are the non-editorial changes made after the February 2020
+“<link xlink:href="https://spec.xproc.org/lastcall-2020-02/head/steps/">last call</link>”
+draft:</para>
+
+ <orderedlist>
+   <listitem>
+    <para>For <tag>p:cast-content-type</tag> the expected result type for casting a 
+    <literal>c:param-set</literal> document to “<literal>application/json</literal>” was
+    specified as <literal>map(xs:QName, xs:string)</literal>. (2020-03-15)</para>
+  </listitem>
+  <listitem>
+    <para>In <tag>p:http-request</tag>, instead of using all document properties (with a few
+      explicit exceptions) as headers, only document properties in the
+      <code>http://www.w3.org/ns/xproc-http</code> namespace will be used. (2020-03-18)</para>
+  </listitem>
+   <listitem>
+     <para><xref linkend="cv.archive-manifest"/>: An attribute
+       <code>c:entry/@content-type</code> was added to the archive manifest, to be filled by the
+       <tag>p:archive-manifest</tag> step. (2020-03-20)</para>
+   </listitem>
+   <listitem>
+     <para>A <option>static-parameters</option> was added to <tag>p:xslt</tag>. (2020-03-23)</para>
+   </listitem>
+   <listitem>
+     <para>The <option>override-content-types</option> option was added to <tag>p:archive-manifest</tag> and <tag>p:unarchive</tag>. (2020-03-30)</para>
+   </listitem>
+   <listitem>
+        <para>Clarified the regular expression matching for <tag>p:text-replace</tag> and
+            <tag>p:unarchive</tag>. Added an error code for invalid regular expressions. (2020-04-02)</para>
+   </listitem>
+   <listitem>
+     <para>Replaced errors XC0070 and XC0130 with XD0079. (2020-04-09)</para>
+   </listitem>
+   <listitem>
+     <para>Changed signature of <tag>p:split-sequence</tag> so that any document can appear one port 
+       source. (2020-05-22)</para>
+   </listitem>
+   <listitem>
+     <para>Change the behavior of the <option>global-context-item</option> option of <tag>p:xslt</tag>. (2020-06-10)</para>
+   </listitem>
+   <listitem>
+     <para>Clarified which steps may produce PSVI annotations. (2020-06-09)</para>
+   </listitem>
+   <listitem>
+     <para>Clarified the behaviour in <tag>p:archive</tag>: A missing resource referenced by
+     c:archive/c:entry/@href is only an error for command = 'create'. (2020-06-11)</para>
+   </listitem>
+   <listitem>
+     <para>Option <option>populate-default-collection</option> is added to the signature of <tag>p:xslt</tag>. (2020-06-20)</para>
+   </listitem>
+   <listitem>
+     <para>Clarified how the default <literal>content-type</literal> header of <tag>p:http-request</tag> is 
+     constructed if a single document appears on <port>source</port> port. (2020-06-20)</para>
+   </listitem>
+   <listitem>
+     <para>Added error (XD0079) to <tag>p:http-request</tag> and <tag>p:load</tag> for invalid content-types. (2020-06-23)</para>
+   </listitem>
+   <listitem>
+     <para>Changed signature of the <port>result</port> port of <tag>p:load</tag> to <literal>sequence="false"</literal> and
+       adapted the prose accordingly. (2020-06-24)</para>
+   </listitem>
+ </orderedlist>
+</appendix>
+
+</specification>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section xml:id="c.markdown-to-html"
+         xmlns:p="http://www.w3.org/ns/xproc"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns="http://docbook.org/ns/docbook">
+<title>p:markdown-to-html</title>
+
+<para>The <code>p:markdown-to-html</code> step converts a text document in Markdown to XHTML.</para>
+
+<p:declare-step type="p:markdown-to-html">
+  <p:input port="source" primary="true" content-types="text"/>
+  <p:output port="result" primary="true" content-types="html"/>
+  <p:option name="parameters" as="map(xs:QName, item()*)?"/>
+</p:declare-step>
+
+<para>The <tag>p:markdown-to-html</tag> step transforms a text document containing
+Markdown, for example <biblioref linkend="commonmark"/>, into HTML.
+<impl>The flavor(s) of Markdown supported and the parameters allowed are
+<glossterm>implementation-defined</glossterm>.</impl>.</para>
+
+<simplesect>
+  <title>Document properties</title>
+  <para feature="load-preserves-none">No document properties are preserved.</para>
+</simplesect>
+</section>

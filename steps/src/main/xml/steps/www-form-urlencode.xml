@@ -1,0 +1,29 @@
+<section xmlns="http://docbook.org/ns/docbook"
+         xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax"
+         xmlns:p="http://www.w3.org/ns/xproc"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="c.www-form-urlencode">
+<title>p:www-form-urlencode</title>
+
+<para>The <tag>p:www-form-urlencode</tag> step encodes a set of parameter
+values as a <literal>x-www-form-urlencoded</literal> string.</para>
+
+<p:declare-step type="p:www-form-urlencode">
+  <p:output port="result" content-types="text/plain"/>
+  <p:option name="parameters" required="true" as="map(xs:string,xs:anyAtomicType+)"/>
+</p:declare-step>
+
+<para>The map entries of <option>parameters</option> option are encoded as a single
+<literal>x-www-form-urlencoded</literal> string of name/value pairs. This
+string is returned on the <port>result</port> port as a text document.
+</para>
+
+<para>If more than one value is associated with a given key in <option>parameters</option>
+option, a name/value pair is created for each value.</para>
+
+<simplesect>
+<title>Document properties</title>
+<para feature="www-form-urlencode-preserves-none">The resulting text document has no properties 
+  apart from <property>content-type</property>. In particular, it has no <property>base-uri</property>.</para>
+</simplesect>
+</section>

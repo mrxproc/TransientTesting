@@ -1,0 +1,34 @@
+<section xmlns="http://docbook.org/ns/docbook" xmlns:cs="http://www.w3.org/XML/XProc/2006/04/components#" xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax" xmlns:p="http://www.w3.org/ns/xproc" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="c.www-form-urldecode">
+<title>p:www-form-urldecode</title>
+
+<para>The <tag>p:www-form-urldecode</tag> step decodes a
+<literal>x-www-form-urlencoded</literal> string into a JSON representation.</para>
+
+<p:declare-step type="p:www-form-urldecode">
+  <p:output port="result" content-types="application/json"/>
+  <p:option name="value" required="true" as="xs:string"/>
+</p:declare-step>
+
+<para>A JSON object of the form “<literal>map(xs:string, xs:string+)</literal>” will
+appear on <port>result</port> port. The <option>value</option> option is interpreted 
+as a string of parameter values encoded using the
+<literal>x-www-form-urlencoded</literal> algorithm. Each name/value
+pair is represented in the JSON object as key/value entry.
+</para>
+
+<para><error code="C0037">It is a
+<glossterm>dynamic error</glossterm> if the <option>value</option> provided
+is not a properly
+<literal>x-www-form-urlencoded</literal> value.</error>
+</para>
+
+<para>If any parameter name occurs more than once in the encoded string,
+a sequence will be associated with the respective key. The order in the sequence
+retains the order of name/value pairs in the encoded string.</para>
+
+<simplesect>
+<title>Document properties</title>
+<para feature="www-form-urldecode-preserves-none">The resulting JSON document has no properties 
+  apart from <property>content-type</property>. In particular, it has no <property>base-uri</property>.</para>
+</simplesect>
+</section>

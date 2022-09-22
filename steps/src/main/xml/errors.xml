@@ -1,0 +1,31 @@
+<section xmlns="http://docbook.org/ns/docbook" xml:id="errors">
+<title>Step Errors</title>
+
+<para>Several of the steps in the standard step library can generate
+<glossterm baseform="dynamic-error">dynamic errors</glossterm>.</para>
+
+<para>A <termdef xml:id="dt-dynamic-error">A <firstterm>dynamic
+error</firstterm> is one which occurs while a pipeline is being
+evaluated.</termdef> Examples of dynamic errors include references to
+URIs that cannot be resolved, steps which fail, and pipelines that
+exhaust the capacity of an implementation (such as memory or disk
+space).</para>
+
+<para>If a step fails due to a dynamic error, failure propagates
+upwards until either a <tag>p:try</tag> is encountered or the entire
+pipeline fails. In other words, outside of a <tag>p:try</tag>, step
+failure causes the entire pipeline to fail.</para>
+
+<para>Dynamic errors raised by steps are divided into two categories:
+dynamic errors and step errors. The distinction is largely that “step
+errors” tend to be related to a particular step or small group of
+steps (e.g., validation error) whereas the “dynamic errors” apply to
+many more steps (e.g., URI not available). There is also precedent for some
+of the error codes dating back to XProc 1.0.</para>
+
+<?dynamic-error-list?>
+
+<?step-error-list?>
+
+</section>
+

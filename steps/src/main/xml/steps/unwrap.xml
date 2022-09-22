@@ -1,0 +1,63 @@
+<section xmlns="http://docbook.org/ns/docbook"
+         xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax"
+         xmlns:p="http://www.w3.org/ns/xproc"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="c.unwrap">
+<title>p:unwrap</title>
+
+<para>The <tag>p:unwrap</tag> step replaces matched elements with their
+children.</para>
+
+<p:declare-step type="p:unwrap">
+   <p:input port="source" content-types="xml html"/>
+  <p:output port="result" content-types="text xml html"/>
+   <p:option name="match" as="xs:string" select="'/*'" e:type="XSLTSelectionPattern"/>
+</p:declare-step>
+
+ <para>The value of the <option>match</option> option <rfc2119>must</rfc2119> be an
+ XSLTSelectionPattern. <error code="C0023">It is a <glossterm>dynamic
+ error</glossterm> if that pattern matches anything other than the document node
+ or element nodes.</error></para>
+
+<para>Every element in the <port>source</port> document that matches
+the specified <option>match</option> pattern is replaced by its children,
+effectively “unwrapping” the children from their parent. Non-element nodes
+and unmatched elements are passed through unchanged.</para>
+
+<note xml:id="note-match-doc">
+<para>The matching applies to the entire document, not just the “top-most”
+matches. A pattern of the form <literal>h:div</literal> will replace
+<emphasis>all</emphasis> <tag>h:div</tag> elements, not just the top-most
+ones.</para>
+</note>
+
+  <para>This step produces a single document. Special cases:</para> 
+  <itemizedlist>
+    <listitem>
+      <para>If the document element is unwrapped, the result might not be well-formed XML.</para>
+      <para>For instance unwrapping the root element of
+          <code><![CDATA[<!-- COMMENT --><root-element/>]]></code> will result in a document node
+        with a single comment node child, which is not well-formed.</para>
+    </listitem>
+    <listitem>
+      <para>If a document consisting of only an empty root element is unwrapped, the result will be
+        a document node without children. The result document&#x2019;s content type will not change.</para>
+    </listitem>
+    <listitem>
+      <para>If a document consisting of a root element containing only text is unwrapped, the result will be
+        a document node with a single text node child. The result document&#x2019;s content type will become
+        “<literal>text/plain</literal>”.</para>
+    </listitem>
+  </itemizedlist>
+  
+  <para>As specified in the core language specification: if the content type changes, the
+      <code>serialization</code> document property, if present, will be removed.</para>
+  
+<simplesect>
+<title>Document properties</title>
+  <para feature="unwrap-preserves-partially">If the resulting document contains exactly one text node,
+    the <literal>content-type</literal> property is changed to <literal>text/plain</literal> and the 
+    <literal>serialization</literal> property is removed, while all other document properties are 
+    preserved. In all other cases, all document properties are preserved.</para>
+</simplesect>
+</section>
