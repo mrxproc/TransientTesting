@@ -44,6 +44,7 @@ specifications</holder>
 </authorgroup>
 
 <abstract>
+  <para>Spoon!</para>
   <para>This specification describes the standard step vocabulary of
   <citetitle>XProc 3.0: An XML Pipeline Language</citetitle>.</para>
 </abstract>
