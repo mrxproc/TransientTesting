@@ -11,20 +11,34 @@ jobs:
       HAVE_ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN != '' }}
       PR_NUMBER: ${{ github.event.number }}
     steps:
+      - name: Install dependencies
+        run: sudo apt-get rsync
+
       - name: Get the pull request
         uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Save XML
-        run: echo Spoon
+        run: |
+          mkdir /tmp/pr-sources
+          for f in src step-* steps; do echo $f; done
 
       - name: Checkout
         uses: actions/checkout@v3
 
       - name: Update XML
-        run: echo "Another spoon"
+        run: rsync -var /tmp/pr-sources/ ./
 
       - name: Build specifications
         run: |
           ./gradlew
+
+#      - name: Deploy
+#        if: ${{ env.HAVE_ACCESS_TOKEN == 'true' }}
+#        uses: JamesIves/github-pages-deploy-action@v4
+#        with:
+#          folder: build/www
+#          token: ${{ secrets.ACCESS_TOKEN }}
+#          branch: gh-pages
+#          target-folder: /pr/${{ github.event.number }}
