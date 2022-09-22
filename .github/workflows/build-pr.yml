@@ -22,7 +22,10 @@ jobs:
       - name: Save XML
         run: |
           mkdir /tmp/pr-sources
-          for f in src step-* steps; do echo $f; done
+          for f in src step-* steps; do
+            mkdir /tmp/pr-sources/$f
+            rsync -ar $f/ /tmp/pr-sources/$f/
+          done
 
       - name: Checkout
         uses: actions/checkout@v3
