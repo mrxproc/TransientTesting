@@ -13,3 +13,12 @@ jobs:
       - name: Build
         run: |
           ./gradlew
+
+      - name: Deploy to branch
+        if: ${{ env.HAVE_ACCESS_TOKEN == 'true' }}
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: build/dist
+          token: ${{ secrets.ACCESS_TOKEN }}
+          branch: gh-pages
+          target-folder: /${{ github.ref_name }}/head
