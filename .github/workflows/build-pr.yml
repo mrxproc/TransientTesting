@@ -3,7 +3,7 @@ on:
   pull_request_target:
     types: [assigned, opened, edited, synchronize, reopened]
     branches:
-      - master
+      - main
 jobs:
   build-and-deploy-pr:
     runs-on: ubuntu-latest
