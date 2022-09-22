@@ -24,7 +24,7 @@ jobs:
           mkdir /tmp/pr-sources
           for f in src step-* steps; do
             mkdir /tmp/pr-sources/$f
-            rsync -var $f/ /tmp/pr-sources/$f/
+            rsync -ar $f/ /tmp/pr-sources/$f/
           done
 
       - name: Checkout
@@ -37,11 +37,11 @@ jobs:
         run: |
           ./gradlew
 
-#      - name: Deploy
-#        if: ${{ env.HAVE_ACCESS_TOKEN == 'true' }}
-#        uses: JamesIves/github-pages-deploy-action@v4
-#        with:
-#          folder: build/www
-#          token: ${{ secrets.ACCESS_TOKEN }}
-#          branch: gh-pages
-#          target-folder: /pr/${{ github.event.number }}
+      - name: Deploy
+        if: ${{ env.HAVE_ACCESS_TOKEN == 'true' }}
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: build/www
+          token: ${{ secrets.ACCESS_TOKEN }}
+          branch: gh-pages
+          target-folder: /pr/${{ github.event.number }}
