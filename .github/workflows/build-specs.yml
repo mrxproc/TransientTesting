@@ -13,8 +13,8 @@ jobs:
       - name: Checkout current gh-pages
         uses: actions/checkout@v3
         with:
-          - ref: gh-pages
-          - path: build/dist
+          ref: gh-pages
+          path: build/dist
 
       - name: Checkout
         uses: actions/checkout@v3
