@@ -23,7 +23,7 @@ jobs:
       - name: Preserve the relevant current gh-pages
         run: |
           mkdir /tmp/save-gh-pages
-          if [ -d build/dist/${{ github.ref_name }}/head; then
+          if [ -d build/dist/${{ github.ref_name }}/head ]; then
              rsync -var build/dist/${{ github.ref_name }}/head/ /tmp/save-gh-pages/
           fi
 
@@ -40,15 +40,12 @@ jobs:
         run: |
           ./gradlew
 
-      - name: Update the publish pages
-        run: rsync -var build/dist/ /tmp/save-gh-pages/
-
-      - name: Deploy to gh-pages on ndw/TransientTestingAlso
-        if: ${{ env.HAVE_ACCESS_TOKEN == 'true' }}
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          folder: build/dist
-          token: ${{ secrets.ACCESS_TOKEN }}
-          repository-name: ndw/TransientTestingAlso
-          branch: gh-pages
-          target-folder: /${{ github.ref_name }}/head
+#      - name: Deploy to gh-pages on ndw/TransientTestingAlso
+#        if: ${{ env.HAVE_ACCESS_TOKEN == 'true' }}
+#        uses: JamesIves/github-pages-deploy-action@v4
+#        with:
+#          folder: build/dist
+#          token: ${{ secrets.ACCESS_TOKEN }}
+#          repository-name: ndw/TransientTestingAlso
+#          branch: gh-pages
+#          target-folder: /${{ github.ref_name }}/head
