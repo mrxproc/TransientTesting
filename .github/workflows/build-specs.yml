@@ -42,4 +42,5 @@ jobs:
       - name: what have we got now
         run: |
           ls -la
+          ls -la build/dist
 
