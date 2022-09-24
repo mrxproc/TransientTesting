@@ -16,13 +16,14 @@ jobs:
       - name: Checkout current gh-pages
         uses: actions/checkout@v3
         with:
+          repository: ndw/TransientTestingAlso
           ref: gh-pages
           path: build/dist
 
       - name: what have we got
         run: |
           ls -la
-          ls -la build
+          ls -la build/dist
 
       - name: Preserve gh-pages
         run: |
