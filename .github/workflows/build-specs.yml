@@ -40,12 +40,12 @@ jobs:
         run: |
           ./gradlew
 
-#      - name: Deploy to gh-pages on ndw/TransientTestingAlso
-#        if: ${{ env.HAVE_ACCESS_TOKEN == 'true' }}
-#        uses: JamesIves/github-pages-deploy-action@v4
-#        with:
-#          folder: build/dist
-#          token: ${{ secrets.ACCESS_TOKEN }}
-#          repository-name: ndw/TransientTestingAlso
-#          branch: gh-pages
-#          target-folder: /${{ github.ref_name }}/head
+      - name: Deploy to gh-pages on ndw/TransientTestingAlso
+        if: ${{ env.HAVE_ACCESS_TOKEN == 'true' }}
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: build/dist
+          token: ${{ secrets.ACCESS_TOKEN }}
+          repository-name: ndw/TransientTestingAlso
+          branch: gh-pages
+          target-folder: /${{ github.ref_name }}/head
