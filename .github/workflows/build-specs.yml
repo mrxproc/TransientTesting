@@ -13,34 +13,37 @@ jobs:
       # We’re going to be updating the gh-pages branch, but that
       # happens from two repositories. We must preserve what we
       # don’t change by getting the current version
-      - name: Checkout current gh-pages
+      - name: Checkout current gh-pages from ndw/TransientTestingAlso
         uses: actions/checkout@v3
         with:
           repository: ndw/TransientTestingAlso
           ref: gh-pages
           path: build/dist
 
-      - name: what have we got
-        run: |
-          ls -la
-          ls -la build/dist
-
-      - name: Preserve gh-pages
+      - name: Preserve the current gh-pages
         run: |
           mkdir /tmp/save-gh-pages
           rsync -var --exclude .git build/dist/ /tmp/save-gh-pages/
 
-      - name: Checkout
+      - name: Checkout this repository
         uses: actions/checkout@v3
 
-      - name: Restore current gh-pages
+      - name: Restore the current gh-pages
         run: |
           mkdir -p build/dist
           rsync -var /tmp/save-gh-pages/ build/dist/
           rm -rf /tmp/save-gh-pages
 
-      - name: what have we got now
+      - name: Build the specifications
         run: |
-          ls -la
-          ls -la build/dist
+          ./gradlew
 
+      - name: Deploy to gh-pages on ndw/TransientTestingAlso
+        if: ${{ env.HAVE_ACCESS_TOKEN == 'true' }}
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: build/dist
+          token: ${{ secrets.ACCESS_TOKEN }}
+          repository-name: ndw/TransientTestingAlso
+          branch: gh-pages
+          target-folder: /${{ github.ref_name }}/head
