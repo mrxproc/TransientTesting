@@ -16,11 +16,14 @@ jobs:
           ref: gh-pages
           path: build/dist
 
+      - name: what have we got
+        run: |
+          ls -la
+
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: what have we got
+      - name: what have we got now
         run: |
-          ls -la build
-          ls -la build/dist
+          ls -la
 
