@@ -22,27 +22,31 @@ jobs:
 
       - name: Preserve the current gh-pages
         run: |
-          mkdir /tmp/save-gh-pages
-          rsync -var --exclude .git build/dist/ /tmp/save-gh-pages/
+          mkdir /tmp/publish-gh-pages
+          rsync -var --exclude .git build/dist/ /tmp/publish-gh-pages/
 
       - name: Checkout this repository
         uses: actions/checkout@v3
 
-      - name: Restore the current gh-pages
-        run: |
-          mkdir -p build/dist
-          rsync -var /tmp/save-gh-pages/ build/dist/
-          rm -rf /tmp/save-gh-pages
+      # The temptation here is to copy the saved gh-pages back
+      # into build/dist and run the build. On my local machine, that
+      # adds the new files and leaves the old ones unchanged. But
+      # when run as a GitHub workflow, the saved gh-pages files
+      # in build/dist are deleted. I have no idea why. So instead,
+      # we’ll publish from the tmp directory...
 
       - name: Build the specifications
         run: |
           ./gradlew
 
+      - name: Update the publish pages
+        run: rsync -var build/dist/ /tmp/publish-gh-pages/
+
       - name: Deploy to gh-pages on ndw/TransientTestingAlso
         if: ${{ env.HAVE_ACCESS_TOKEN == 'true' }}
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: build/dist
+          folder: /tmp/publish-gh-pages
           token: ${{ secrets.ACCESS_TOKEN }}
           repository-name: ndw/TransientTestingAlso
           branch: gh-pages
